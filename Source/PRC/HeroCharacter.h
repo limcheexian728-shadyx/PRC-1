@@ -3,19 +3,33 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Health_Component.h"
+#include "StatComponent.h"
 #include "GameFramework/Character.h"
+#include "PlayerHUD.h"
 #include "HeroCharacter.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCollectibleCountChanged, int32, NewCount);
+
 
 UCLASS()
 class PRC_API AHeroCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
+	UPROPERTY(EditDefaultsOnly, Category="HUD")
+	TSubclassOf<UPlayerHUD> HUDWidgetClass;
+
+	UPROPERTY()
+	TObjectPtr<UPlayerHUD> HUDInstance;
+
 public:
 	// Sets default values for this character's properties
 	AHeroCharacter();
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UHealth_Component> HealthComp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UStatComponent> StatComp;
 
 protected:
 	// Called when the game starts or when spawned
@@ -75,6 +89,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Collectibles")
 	void AddCollectible();
+
+	
 
 private:
 	int32 CollectibleCount = 0;

@@ -20,7 +20,6 @@ AHeroCharacter::AHeroCharacter()
     FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
     FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
     FollowCamera->bUsePawnControlRotation = false; // camera just sits on the boom
-
     bUseControllerRotationYaw = false;
     bUseControllerRotationPitch = false;
     bUseControllerRotationRoll = false;
@@ -28,12 +27,20 @@ AHeroCharacter::AHeroCharacter()
     GetCharacterMovement()->bOrientRotationToMovement = true;
     GetCharacterMovement()->RotationRate = FRotator(0.f, 500.f, 0.f);
 
+    HealthComp = CreateDefaultSubobject<UHealth_Component>(TEXT("HealthComp"));
+    StatComp = CreateDefaultSubobject<UStatComponent>(TEXT("StatComp"));
 }
 
 // Called when the game starts or when spawned
 void AHeroCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+    if (StatComp && GetCharacterMovement())
+    {
+        GetCharacterMovement()->MaxWalkSpeed *= StatComp->MoveSpeedMultiplier;
+    }
+
     if (APlayerController* PC = Cast<APlayerController>(Controller))
     {
         if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
@@ -43,6 +50,11 @@ void AHeroCharacter::BeginPlay()
         }
     }
 
+    if (IsLocallyControlled() && HUDWidgetClass)
+    {
+        HUDInstance = CreateWidget<UPlayerHUD>(PC, HUDWidgetClass);
+        if (HUDInstance) HUDInstance->AddToViewport();
+    }
 }
 
 // Called every frame
