@@ -48,13 +48,15 @@ void AHeroCharacter::BeginPlay()
         {
             Subsystem->AddMappingContext(DefaultMappingContext, 0);
         }
+
+        if (IsLocallyControlled() && HUDWidgetClass)
+        {
+            HUDInstance = CreateWidget<UPlayerHUD>(PC, HUDWidgetClass);
+            if (HUDInstance) HUDInstance->AddToViewport();
+        }
     }
 
-    if (IsLocallyControlled() && HUDWidgetClass)
-    {
-        HUDInstance = CreateWidget<UPlayerHUD>(PC, HUDWidgetClass);
-        if (HUDInstance) HUDInstance->AddToViewport();
-    }
+
 }
 
 // Called every frame
@@ -74,9 +76,16 @@ void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
         EIC->BindAction(LookAction, ETriggerEvent::Triggered, this, &AHeroCharacter::Look);
         EIC->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
         EIC->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+        EIC->BindAction(IA_TestDamage, ETriggerEvent::Started, this, &AHeroCharacter::OnTestDamage);
         //EIC->BindAction(DodgeAction, ETriggerEvent::Started, this, &AHeroCharacter::Dodge);
     }
 }
+
+void AHeroCharacter::OnTestDamage(const FInputActionValue&)
+{
+    if (HealthComp) HealthComp->TakeDamage(25.f);
+}
+
 void AHeroCharacter::Move(const FInputActionValue& Value)
 {
     const FVector2D MoveInput = Value.Get<FVector2D>();

@@ -7,6 +7,7 @@
 #include "StatComponent.h"
 #include "GameFramework/Character.h"
 #include "PlayerHUD.h"
+#include "InputActionValue.h"
 #include "HeroCharacter.generated.h"
 
 
@@ -21,6 +22,8 @@ class PRC_API AHeroCharacter : public ACharacter
 
 	UPROPERTY()
 	TObjectPtr<UPlayerHUD> HUDInstance;
+
+
 
 public:
 	// Sets default values for this character's properties
@@ -90,7 +93,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Collectibles")
 	void AddCollectible();
 
-	
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UInputAction> IA_TestDamage;
+
+	void OnTestDamage(const FInputActionValue& Value);
 
 private:
 	int32 CollectibleCount = 0;
