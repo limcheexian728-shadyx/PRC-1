@@ -23,10 +23,20 @@ public:
 	float MaxHealth = 100.f;
 	float CurrentHealth = 0.f;
 	// delegate UPROPERTY slots go here after the DECLARE macros above
+	//void TakeDamage(float Amount);
+	//void Heal(float Amount);
+
+	UPROPERTY(BlueprintAssignable) 
+	FOnHealthChanged OnHealthChanged;
+
+	UPROPERTY(BlueprintAssignable) 
+	FOnPlayerDeath OnPlayerDeath;
+
+	UFUNCTION(BlueprintCallable) 
 	void TakeDamage(float Amount);
+
+	UFUNCTION(BlueprintCallable) 
 	void Heal(float Amount);
-	UPROPERTY(BlueprintAssignable) FOnHealthChanged OnHealthChanged;
-	UPROPERTY(BlueprintAssignable) FOnPlayerDeath OnPlayerDeath;
 
 protected:
 	// Called when the game starts or when spawned

@@ -8,6 +8,7 @@
 #include "GameFramework/Character.h"
 #include "PlayerHUD.h"
 #include "InputActionValue.h"
+#include "InputAction.h"
 #include "HeroCharacter.generated.h"
 
 
@@ -95,6 +96,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UInputAction> IA_TestDamage;
+
+	UPROPERTY(EditAnywhere, Category="Input")
+	TObjectPtr<UInputAction> IA_Attack;
 
 	void OnTestDamage(const FInputActionValue& Value);
 
